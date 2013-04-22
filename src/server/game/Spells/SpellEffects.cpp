@@ -578,6 +578,20 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
     // selection by spell family
     switch (m_spellInfo->SpellFamilyName)
     {
+        case SPELLFAMILY_GENERIC:
+            switch (m_spellInfo->Id)
+            {
+                case 74763:                                  // Subjugate
+                {
+                    if (m_caster->GetTypeId() != TYPEID_PLAYER)
+                        return;
+
+                    m_caster->ToPlayer()->KilledMonsterCredit(40099, unitTarget->GetGUID());
+                    m_caster->CastSpell(m_caster, 74760, true);
+                    return;
+                }
+            }
+            break;
         case SPELLFAMILY_PALADIN:
             switch (m_spellInfo->Id)
             {
