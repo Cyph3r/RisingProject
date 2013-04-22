@@ -1350,6 +1350,17 @@ void Player::HandleDrowning(uint32 time_diff)
     if (!m_MirrorTimerFlags)
         return;
 
+    bool disableFatigue;
+   
+    switch (GetZoneId())
+    { 
+          case 4815: // Vash'jir Zone HACK
+          case 5144:
+          case 5145:
+              disableFatigue = true;
+              break;
+    }
+
     // In water
     if (m_MirrorTimerFlags & UNDERWATER_INWATER)
     {
@@ -1387,7 +1398,7 @@ void Player::HandleDrowning(uint32 time_diff)
     }
 
     // In dark water
-    if (m_MirrorTimerFlags & UNDERWARER_INDARKWATER)
+    if ((m_MirrorTimerFlags & UNDERWARER_INDARKWATER) && !disableFatigue)
     {
         // Fatigue timer not activated - activate it
         if (m_MirrorTimer[FATIGUE_TIMER] == DISABLED_MIRROR_TIMER)
