@@ -4929,8 +4929,8 @@ SpellCastResult Spell::CheckCast(bool strict)
                     return SPELL_FAILED_LINE_OF_SIGHT;
 
             if (!IsTriggered()) // Smoke Bomb
-              if (m_caster->IsVisionObscured(target))
-                  return SPELL_FAILED_BAD_TARGETS;
+                if (m_caster->IsVisionObscured(target))
+                    return SPELL_FAILED_BAD_TARGETS;
         }
     }
 
