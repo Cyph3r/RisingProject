@@ -251,6 +251,7 @@ enum eGurgthock
     QUEST_AMPHITHEATER_ANGUISH_YGGDRAS_1          = 12932,
     QUEST_AMPHITHEATER_ANGUISH_MAGNATAUR          = 12933,
     QUEST_AMPHITHEATER_ANGUISH_FROM_BEYOND        = 12934,
+    QUEST_AMPHITHEATER_ANGUISH_VLADOF             = 12948,
 
     NPC_ORINOKO_TUSKBREAKER                       = 30020,
     NPC_KORRAK_BLOODRAGER                         = 30023,
@@ -264,6 +265,7 @@ enum eGurgthock
     NPC_FIEND_AIR                                 = 30045,
     NPC_FIEND_FIRE                                = 30042,
     NPC_FIEND_EARTH                               = 30043,
+    NPC_VLADOF_THE_BUTCHER                        = 30022,
 
     SAY_QUEST_ACCEPT_TUSKARRMAGEDON               = 0,
     SAY_QUEST_ACCEPT_KORRAK_1                     = 1,
@@ -404,6 +406,10 @@ public:
                             uiTimer = 2000;
                             uiPhase = 12;
                             break;
+                        case QUEST_AMPHITHEATER_ANGUISH_VLADOF:
+                            uiTimer = 2000;
+                            uiPhase = 15;
+                            break;
                    }
                         break;
                 }
@@ -526,6 +532,18 @@ public:
                                 creature->AI()->SetData(1, uiBossRandom);
                             uiPhase = 0;
                             break;
+                        case 15:
+                            if (Creature* pSummon = me->SummonCreature(NPC_VLADOF_THE_BUTCHER, SpawnPosition[0], TEMPSUMMON_CORPSE_DESPAWN, 1000))
+                                SummonGUID = pSummon->GetGUID();
+                            uiPhase = 16;
+                            uiTimer = 4000;
+                            break;
+                         case 16:
+                           if (Creature* pSummon = Unit::GetCreature(*me, SummonGUID))
+                                pSummon->GetMotionMaster()->MoveJump(5776.319824f, -2981.005371f, 273.100037f, 10.0f, 20.0f);
+                            uiPhase = 0;
+                            SummonGUID = 0;
+                            break;
                     }
                 }else uiTimer -= uiDiff;
             }
@@ -550,6 +568,9 @@ public:
                 creature->AI()->SetData(1, quest->GetQuestId());
                 break;
             case QUEST_AMPHITHEATER_ANGUISH_FROM_BEYOND:
+                creature->AI()->SetData(1, quest->GetQuestId());
+                break;
+            case QUEST_AMPHITHEATER_ANGUISH_VLADOF:
                 creature->AI()->SetData(1, quest->GetQuestId());
                 break;
         }
