@@ -752,6 +752,45 @@ public:
     }
 };
 
+// Shockwave
+// Spell Id: 46968
+class spell_warr_shockwave : public SpellScriptLoader
+{
+public:
+    spell_warr_shockwave() : SpellScriptLoader("spell_warr_shockwave") { }
+
+    class spell_warr_shockwave_SpellScript : public SpellScript
+    {
+        PrepareSpellScript(spell_warr_shockwave_SpellScript);
+
+        void CalculateDamage(SpellEffIndex effect)
+        {
+            // Formula: [Effect2BasePoints] / 100 * AttackPower
+            if (Unit* caster = GetCaster())
+            {
+				int32 rank1 = caster->GetAuraCount(87095);
+				int32 rank2 = caster->GetAuraCount(87096);
+				int32 modify = rank1*5 + rank2*10 + 100;
+                    //int32 bp2 = caster->CalculateSpellDamage(GetHitUnit(), GetSpellInfo(), EFFECT_2);
+				SetHitDamage((caster->GetTotalAttackPowerValue(BASE_ATTACK)*75/100) * modify / 100);
+
+				caster->RemoveAura(87095); // Remove Thunderstruck buff rank1
+				caster->RemoveAura(87096); // Remove Thunderstruck buff rank2
+            }
+        }
+
+        void Register()
+        {
+            OnEffectHitTarget += SpellEffectFn(spell_warr_shockwave::spell_warr_shockwave_SpellScript::CalculateDamage, EFFECT_1, SPELL_EFFECT_SCHOOL_DAMAGE);
+        }
+    };
+
+    SpellScript* GetSpellScript() const
+    {
+        return new spell_warr_shockwave_SpellScript();
+    }
+};
+
 void AddSC_warrior_spell_scripts()
 {
     new spell_warr_bloodthirst();
@@ -770,5 +809,6 @@ void AddSC_warrior_spell_scripts()
     new spell_warr_sweeping_strikes();
     new spell_warr_vigilance();
     new spell_warr_vigilance_trigger();
-	new spell_warr_heroic_strike();
+    new spell_warr_heroic_strike();
+    new spell_warr_shockwave();
 }
